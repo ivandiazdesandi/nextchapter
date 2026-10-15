@@ -1,5 +1,6 @@
 import { getWork, workKey } from './api/openLibrary.js';
-import { cachedBook } from './storage.js';
+import { cachedBook, readShelf } from './storage.js';
+import { shelfControls } from './shelfControls.js';
 import { cover, element, showMessage } from './ui.js';
 
 const container = document.querySelector('#book-detail');
@@ -12,10 +13,11 @@ async function load() {
   showMessage(container, 'Opening the book', 'Loading its information from Open Library.');
   try {
     const work = await getWork(key);
-    const cached = cachedBook(key);
+    const cached = cachedBook(key) || readShelf().books.find(book => book.key === key);
     const book = {
       key, title: work.title || cached?.title || 'Untitled book', authors: cached?.authors || [],
       year: cached?.year || null, coverId: work.covers?.find(x => x > 0) || cached?.coverId || null,
+      isbns: cached?.isbns || [],
     };
     document.title = `${book.title} | NextChapter`;
     const panel = element('article', 'detail-panel');
@@ -34,7 +36,7 @@ async function load() {
     const source = element('a', 'button', 'Read more on Open Library');
     source.href = `https://openlibrary.org${key}`;
     source.target = '_blank'; source.rel = 'noopener noreferrer';
-    content.append(source, element('p', 'development-note', 'The personal shelf and Google Books information are planned for the next update.'));
+    content.append(source, element('h2', '', 'Keep it on your shelf'), shelfControls(book));
     panel.append(cover(book), content);
     container.replaceChildren(panel);
   } catch (error) {
