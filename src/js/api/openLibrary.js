@@ -34,18 +34,18 @@ export function searchUrl({ title = '', author = '', subject = '', sort = 'relev
   return url;
 }
 
-export async function requestJson(url, { signal } = {}) {
+export async function requestJson(url, { signal, provider = 'Open Library', timeoutMs = 15000 } = {}) {
   const timeout = new AbortController();
-  const timer = setTimeout(() => timeout.abort(new Error('The request took too long. Please try again.')), 15000);
+  const timer = setTimeout(() => timeout.abort(new Error(`${provider} took too long to respond. Please try again.`)), timeoutMs);
   const requestSignal = signal ? AbortSignal.any([signal, timeout.signal]) : timeout.signal;
   try {
     const response = await fetch(url, { signal: requestSignal });
-    if (!response.ok) throw new Error(`Open Library is unavailable (${response.status}). Please try again.`);
+    if (!response.ok) throw new Error(`${provider} is unavailable (${response.status}). Please try again.`);
     return await response.json();
   } catch (error) {
     if (signal?.aborted) throw error;
     if (timeout.signal.aborted) throw timeout.signal.reason;
-    if (error instanceof TypeError) throw new Error('Could not reach Open Library. Check your connection and try again.');
+    if (error instanceof TypeError) throw new Error(`Could not reach ${provider}. Check your connection and try again.`, { cause: error });
     throw error;
   } finally {
     clearTimeout(timer);
@@ -64,4 +64,10 @@ export async function getWork(key) {
   const safeKey = workKey(key);
   if (!safeKey) throw new Error('This book link is not valid. Return to search and choose a book.');
   return requestJson(`https://openlibrary.org${safeKey}.json`);
+}
+
+export async function getAuthorName(key) {
+  if (!/^\/authors\/OL\d+A$/.test(key)) return '';
+  const author = await requestJson(`https://openlibrary.org${key}.json`);
+  return typeof author.name === 'string' ? author.name : '';
 }
