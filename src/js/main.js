@@ -1,5 +1,5 @@
-import { searchBooks, PAGE_SIZE } from './api/openLibrary.js';
-import { bookCard, showMessage } from './ui.js';
+import { searchBooks, PAGE_SIZE } from './api/openLibrary.js?v=final1';
+import { bookCard, showMessage } from './ui.js?v=final1';
 
 const form = document.querySelector('#search-form');
 const results = document.querySelector('#results');

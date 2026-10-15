@@ -1,8 +1,8 @@
-import { getWork, workKey, getAuthorName } from './api/openLibrary.js';
-import { getAuthorBiography } from './api/wikipedia.js';
-import { cachedBook, readShelf } from './storage.js';
-import { shelfControls } from './shelfControls.js';
-import { cover, element, showMessage } from './ui.js';
+import { getWork, workKey, getAuthorName } from './api/openLibrary.js?v=final1';
+import { getAuthorBiography } from './api/wikipedia.js?v=final1';
+import { cachedBook, readShelf } from './storage.js?v=final1';
+import { shelfControls } from './shelfControls.js?v=final1';
+import { cover, element, showMessage } from './ui.js?v=final1';
 
 const container = document.querySelector('#book-detail');
 const key = workKey(new URLSearchParams(location.search).get('key'));
@@ -51,6 +51,7 @@ async function load() {
       key, title: work.title || cached?.title || 'Untitled book', authors: cached?.authors || [],
       year: cached?.year || null, coverId: work.covers?.find(x => x > 0) || cached?.coverId || null,
       isbns: cached?.isbns || [],
+      languages: cached?.languages || [], editionCount: cached?.editionCount ?? null,
     };
     document.title = `${book.title} | NextChapter`;
     const panel = element('article', 'detail-panel');
@@ -59,6 +60,11 @@ async function load() {
     const authorLine = element('p', 'lead', book.authors.join(', ') || 'Author information is available at the source link below.');
     content.append(authorLine);
     if (book.year) content.append(element('p', 'muted', `First published ${book.year}`));
+    if (book.editionCount !== null) content.append(element('p', 'muted', `${book.editionCount.toLocaleString()} catalog editions`));
+    if (book.languages.length) {
+      const names = { eng: 'English', spa: 'Spanish', fre: 'French', ger: 'German', ita: 'Italian', por: 'Portuguese', chi: 'Chinese', jpn: 'Japanese' };
+      content.append(element('p', 'muted', `Catalog languages include ${book.languages.map(code => names[code] || code.toUpperCase()).join(', ')}`));
+    }
     const description = typeof work.description === 'string' ? work.description : work.description?.value;
     content.append(element('h2', '', 'About this book'), element('p', 'description', description || 'Open Library has not provided a description for this book.'));
     const subjects = Array.isArray(work.subjects) ? work.subjects.filter(x => typeof x === 'string').slice(0, 8) : [];

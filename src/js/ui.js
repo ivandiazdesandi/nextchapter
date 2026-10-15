@@ -1,4 +1,4 @@
-import { cacheBook } from './storage.js';
+import { cacheBook } from './storage.js?v=final1';
 
 export function element(tag, className, text) {
   const node = document.createElement(tag);
@@ -33,6 +33,9 @@ export function bookCard(book) {
   const author = element('p', 'book-author', book.authors.join(', ') || 'Author unavailable');
   const year = element('p', 'book-year', book.year ? `First published ${book.year}` : 'Publication year unavailable');
   link.append(heading, author, year);
+  if (book.editionCount !== null && book.editionCount !== undefined) {
+    link.append(element('p', 'book-year', `${book.editionCount.toLocaleString()} catalog ${book.editionCount === 1 ? 'edition' : 'editions'}`));
+  }
   card.append(link);
   return card;
 }

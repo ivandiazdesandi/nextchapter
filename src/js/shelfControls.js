@@ -1,5 +1,5 @@
-import { readShelf, saveBook, updateBook, STATUSES } from './storage.js';
-import { element } from './ui.js';
+import { readShelf, saveBook, updateBook, STATUSES } from './storage.js?v=final1';
+import { element } from './ui.js?v=final1';
 
 export function shelfControls(book, { editing = false, onSave } = {}) {
   const form = element('form', 'shelf-editor');

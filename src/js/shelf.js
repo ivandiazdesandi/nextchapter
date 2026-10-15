@@ -1,6 +1,6 @@
-import { readShelf, removeBook, selectShelf } from './storage.js';
-import { bookCard, element, showMessage } from './ui.js';
-import { shelfControls } from './shelfControls.js';
+import { readShelf, removeBook, selectShelf } from './storage.js?v=final1';
+import { bookCard, element, showMessage } from './ui.js?v=final1';
+import { shelfControls } from './shelfControls.js?v=final1';
 
 const container = document.querySelector('#shelf-books');
 const message = document.querySelector('#shelf-status');
