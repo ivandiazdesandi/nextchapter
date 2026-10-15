@@ -16,10 +16,17 @@ test('search encodes combined title, author, and subject without changing their 
 });
 test('normalization tolerates missing fields and rejects invalid work IDs', () => {
   assert.deepEqual(normalizeBook({ key: 'OL123W' }), {
-    key: '/works/OL123W', title: 'Untitled book', authors: [], year: null, coverId: null, isbns: [], subjects: [],
+    key: '/works/OL123W', title: 'Untitled book', authors: [], year: null, coverId: null, isbns: [], subjects: [], languages: [], editionCount: null,
   });
   assert.equal(normalizeBook({ key: 'javascript:alert(1)' }), null);
   assert.equal(workKey('/works/OL123W'), '/works/OL123W');
+});
+test('normalized API books have nine attributes with validated edition and language data', () => {
+  const book = normalizeBook({ key: 'OL123W', title: 'A book', language: ['eng', null, 'spa'], edition_count: 42 });
+  assert.equal(Object.keys(book).length, 9);
+  assert.deepEqual(book.languages, ['eng', 'spa']);
+  assert.equal(book.editionCount, 42);
+  assert.equal(normalizeBook({ key: 'OL123W', edition_count: -1 }).editionCount, null);
 });
 test('author and subject arrays retain only text; unusable covers are omitted', () => {
   const book = normalizeBook({ key: 'OL123W', author_name: ['Author', null], subject: ['Fantasy', 8], cover_i: -1 });
