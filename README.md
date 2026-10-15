@@ -25,11 +25,12 @@ My WDD330 individual project: find a book, keep a reading shelf, and learn about
 
 ## Week 7 final update
 
+- Nine normalized book attributes: key, title, authors, year, cover ID, ISBNs, subjects, languages, and edition count. Cards/details show edition metadata when supplied.
 - Two independent data sources: Open Library for books and Wikipedia's MediaWiki Action API for author excerpts. Wikipedia replaced the planned Google Books enrichment after anonymous Google Books requests returned a quota error.
 - The detail page looks up an exact author name, follows redirects, rejects missing/disambiguation pages, and provides article/license attribution. Author lookup failures have their own retry and never hide the book or shelf form.
 - Direct book URLs can obtain the first author name from the Open Library author record.
-- Shelf cards use a single column on phones, two on tablets, and three on wide screens. A short card-entry animation respects reduced-motion preferences.
-- ESLint recommended rules, 20 automated tests, and the Vite production build pass.
+- Shelf cards use a single column on phones, two on tablets, and three on wide screens. Card entry, cover lift, button lift/shadow, subject-chip motion, and editor focus transitions respect reduced-motion preferences.
+- ESLint recommended rules, 21 automated tests, and the Vite production build pass.
 - A 375px frame-based check is available at `tests/responsive.html`. This is a test utility, not an extra app feature.
 
 ## Run locally
