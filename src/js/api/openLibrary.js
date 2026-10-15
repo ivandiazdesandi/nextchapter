@@ -21,7 +21,7 @@ export function normalizeBook(doc) {
   };
 }
 
-export function searchUrl({ title = '', author = '', subject = '' }, page = 1) {
+export function searchUrl({ title = '', author = '', subject = '', sort = 'relevance' }, page = 1) {
   const url = new URL(SEARCH_URL);
   for (const [name, value] of Object.entries({ title, author, subject })) {
     if (value.trim()) url.searchParams.set(name, value.trim());
@@ -30,6 +30,7 @@ export function searchUrl({ title = '', author = '', subject = '' }, page = 1) {
   url.searchParams.set('fields', FIELDS);
   url.searchParams.set('limit', String(PAGE_SIZE));
   url.searchParams.set('page', String(page));
+  if (['new', 'old'].includes(sort)) url.searchParams.set('sort', sort);
   return url;
 }
 
@@ -52,7 +53,7 @@ export async function requestJson(url, { signal } = {}) {
 }
 
 export async function searchBooks(query, options = {}) {
-  const data = await requestJson(searchUrl(query), options);
+  const data = await requestJson(searchUrl(query, options.page || 1), options);
   if (!Array.isArray(data.docs)) throw new Error('Open Library returned an unexpected response. Please try again.');
   const books = data.docs.map(normalizeBook).filter(Boolean);
   const total = Number(data.numFound ?? data.num_found);
