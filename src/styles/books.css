@@ -61,6 +61,16 @@ textarea { resize: vertical; }
 .author-panel { margin-top: 2rem; padding-top: .5rem; border-top: 1px solid var(--line); }
 @keyframes card-arrive { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: translateY(0); } }
 @media (prefers-reduced-motion: no-preference) { .book-card { animation: card-arrive .22s ease-out both; } }
+@media (prefers-reduced-motion: no-preference) {
+  .book-link .cover { transition: background .2s, transform .2s; }
+  .book-link:hover .cover { transform: translateY(-3px); }
+  .button { transition: background .16s, box-shadow .16s, transform .16s; }
+  .button:not(:disabled):hover { transform: translateY(-1px); box-shadow: 0 4px 10px #24364a20; }
+  .chip { transition: background .16s, border-color .16s, transform .16s; }
+  .chip:hover { transform: translateY(-2px); }
+  .shelf-editor { transition: box-shadow .16s, border-color .16s; border-radius: 6px; }
+  .shelf-editor:focus-within { box-shadow: 0 0 0 3px #d6a85a55; border-color: #936313; }
+}
 @media (min-width: 650px) {
   .search-fields { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .book-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2rem; }
