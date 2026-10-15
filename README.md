@@ -1,6 +1,6 @@
 # NextChapter
 
-My WDD330 individual project: find a book by title, author, or subject and open its Open Library information. This is separate from the SleepOutside team application.
+My WDD330 individual project: find a book, keep a reading shelf, and learn about its author. Book data comes from Open Library and author background comes from Wikipedia. This is separate from the SleepOutside team application.
 
 ## Search foundation
 
@@ -23,6 +23,15 @@ My WDD330 individual project: find a book by title, author, or subject and open 
 - Search by relevance, newest, or oldest first. Load more requests the next 12 results, omits duplicate works, and preserves existing cards if that request fails.
 - Fifteen automated tests and the production build pass.
 
+## Week 7 final update
+
+- Two independent data sources: Open Library for books and Wikipedia's MediaWiki Action API for author excerpts. Wikipedia replaced the planned Google Books enrichment after anonymous Google Books requests returned a quota error.
+- The detail page looks up an exact author name, follows redirects, rejects missing/disambiguation pages, and provides article/license attribution. Author lookup failures have their own retry and never hide the book or shelf form.
+- Direct book URLs can obtain the first author name from the Open Library author record.
+- Shelf cards use a single column on phones, two on tablets, and three on wide screens. A short card-entry animation respects reduced-motion preferences.
+- ESLint recommended rules, 20 automated tests, and the Vite production build pass.
+- A 375px frame-based check is available at `tests/responsive.html`. This is a test utility, not an extra app feature.
+
 ## Run locally
 
 Requires Node 20.19+ or 22.12+.
@@ -31,6 +40,7 @@ Requires Node 20.19+ or 22.12+.
 npm install
 npm run dev
 npm test
+npm run lint
 npm run build
 npm run preview
 ```
@@ -43,9 +53,19 @@ GitHub Pages serves the source pages from `main` at the repository root. They al
 
 Search metadata is cached for this browser session to carry author/year into the initial detail view. The shelf uses `nextchapter.shelf.v1` in localStorage: work key, title, authors, cover ID, year, reading status, note, and update timestamp. A corrupt shelf is reported without overwriting it. Notes and statuses are stored only in this browser and are not sent to Open Library. Clearing browser storage removes the shelf; there is no account sync.
 
-## Remaining work
+## Scope and known limitations
 
-Google Books enrichment, API credentials, ISBN/title-author matching, and two-provider error handling remain open on Trello. The final requirement for two independent API sources is not complete yet. Direct detail links may lack author/year until opened from a search or saved shelf. Broader phone-width, accessibility, failure testing, and peer feedback remain Week 7 work. This is the Week 6 shelf/search release, not the finished final project.
+Google Books and ISBN-based edition enrichment were dropped in favor of Wikipedia author background. The app does not promise page counts or previews it cannot provide. Exact-name lookups can miss an author or lead to an article for a namesake; the article title and source are shown so the reader can check it. Wikipedia disambiguation pages are not displayed as biographies. Only the first author receives an excerpt.
+
+The shelf is device/browser-specific. It has no account or cloud sync. Peer feedback, a comprehensive screen-reader review, and Lighthouse auditing have not been completed and remain open on the board. The student still needs to record and host the required video.
+
+## Wikipedia attribution
+
+Author excerpts are shortened from Wikipedia contributors' articles, with a link to each article and the [CC BY-SA 4.0 license](https://creativecommons.org/licenses/by-sa/4.0/). The API requests plain text; it never inserts API-supplied HTML. No Wikipedia images are used.
+
+## Manual verification
+
+Use the public site for title/author/subject searches, sorting, Load more, book details, author attribution, and shelf save/edit/filter/remove. Use `tests/responsive.html` for the three app views at 375px. Unit tests exercise provider errors/timeouts, missing author data, corruption, blocked storage, duplicate saves, and page/sort parameters. A passing unit test is not a claim that a real provider outage was induced in the live browser.
 
 ## Planning
 
