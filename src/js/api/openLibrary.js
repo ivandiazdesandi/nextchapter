@@ -1,5 +1,5 @@
 const SEARCH_URL = 'https://openlibrary.org/search.json';
-const FIELDS = 'key,title,author_name,first_publish_year,cover_i,isbn,subject';
+const FIELDS = 'key,title,author_name,first_publish_year,cover_i,isbn,subject,language,edition_count';
 export const PAGE_SIZE = 12;
 
 export function workKey(value) {
@@ -18,6 +18,8 @@ export function normalizeBook(doc) {
     coverId: Number.isInteger(doc.cover_i) && doc.cover_i > 0 ? doc.cover_i : null,
     isbns: Array.isArray(doc.isbn) ? doc.isbn.filter(x => typeof x === 'string').slice(0, 5) : [],
     subjects: Array.isArray(doc.subject) ? doc.subject.filter(x => typeof x === 'string').slice(0, 8) : [],
+    languages: Array.isArray(doc.language) ? doc.language.filter(x => typeof x === 'string').slice(0, 8) : [],
+    editionCount: Number.isInteger(doc.edition_count) && doc.edition_count >= 0 ? doc.edition_count : null,
   };
 }
 

@@ -1,4 +1,4 @@
-import { requestJson } from './openLibrary.js';
+import { requestJson } from './openLibrary.js?v=final1';
 
 export function authorUrl(name) {
   if (typeof name !== 'string' || !name.trim()) throw new Error('Choose a book with an author first.');
